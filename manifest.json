@@ -1,0 +1,16 @@
+{
+  "name": "DigtalCloset",
+  "short_name": "DigtalCloset",
+  "description": "Sort clothes by season and type.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f7fb",
+  "theme_color": "#ffffff",
+  "lang": "zh-TW",
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

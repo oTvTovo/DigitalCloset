@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="電子衣櫃" />
+  <title>電子衣櫃</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Loading screen (shown while the app starts) -->
+  <div id="loadingScreen">
+    <div class="loading-title">CLOTHES.</div>
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Top bar: title and season tabs -->
+  <div class="top-bar">
+    <div class="top-bar-title">CLOTHES. <span class="sync-dot" id="syncDot" title="同步狀態"></span></div>
+    <div class="season-tabs" id="seasonTabs"></div>
+  </div>
+
+  <!-- Category bar: filter by type of clothing -->
+  <div class="cat-bar-wrap">
+    <div class="cat-bar" id="catBar">
+      <div class="cat-item initial-cat all-cat cat-active" id="allCatBtn" onclick="setCat('全部')">全部</div>
+      <div class="cat-item initial-cat" onclick="setCat('上衣')">上衣</div>
+      <div class="cat-item initial-cat" onclick="setCat('長褲')">長褲</div>
+      <div class="cat-item initial-cat" onclick="setCat('短褲 / 裙')">短褲 / 裙</div>
+      <div class="cat-item initial-cat" onclick="setCat('外套')">外套</div>
+      <div class="cat-item add-cat-btn" id="addCatBtn" onclick="openCatForm()">＋</div>
+      <div class="cat-item edit-cat-btn" id="editCatBtn" onclick="toggleCatEditing()" style="display:none">✎</div>
+    </div>
+  </div>
+
+  <!-- Clothes list -->
+  <div class="list" id="list"></div>
+
+  <!-- Add button (bottom right corner) -->
+  <button class="fab" id="fab" onclick="openForm()">＋</button>
+
+  <!-- Form: add or edit clothes -->
+  <div class="overlay" id="overlay" onclick="handleOverlayClick(event,'overlay')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">
+        <span id="sheetTitle">新增衣服</span>
+        <button class="close-btn" onclick="closeAddSheet()">✕</button>
+      </div>
+      <form id="itemForm" onsubmit="return false;">
+        <div class="photo-area" id="photoArea" onclick="document.getElementById('fileInput').click()" style="position:relative">
+          <div id="photoPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="font-size:22px;color:#c0c0e0">𖧀</div>
+          </div>
+          <img id="photoPreview" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover" />
+          <div id="photoUploading" class="photo-uploading" style="display:none">
+            <div class="spinner" style="width:18px;height:18px;border-width:2px"></div> 上傳中...
+          </div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" onchange="handlePhoto(event)" />
+
+        <label class="field-label">名稱 <span style="color:#ff5470">*</span></label>
+        <input type="text" id="itemName" placeholder="" />
+        <div class="error-message" id="nameError">^_^</div>
+
+        <label class="field-label">季節 <span style="color:#ff5470">*</span></label>
+        <select id="itemSeason">
+          <option value="">選擇季節</option>
+          <option value="spring">春</option>
+          <option value="summer">夏</option>
+          <option value="autumn">秋</option>
+          <option value="winter">冬</option>
+        </select>
+        <div class="error-message" id="seasonError">^_^</div>
+
+        <label class="field-label">類別 <span style="color:#ff5470">*</span></label>
+        <select id="itemCategory">
+          <option value="">選擇類別</option>
+        </select>
+        <div class="error-message" id="categoryError">^_^</div>
+
+        <label class="field-label">穿了幾次</label>
+        <div class="counter-row">
+          <button type="button" class="counter-btn" onclick="changeWear(-1)">－</button>
+          <div class="counter-val" id="wearVal">0</div>
+          <button type="button" class="counter-btn" onclick="changeWear(1)">＋</button>
+        </div>
+
+        <label class="field-label">備註</label>
+        <textarea id="itemNote" rows="3" placeholder=""></textarea>
+
+        <button type="submit" class="save-btn" id="saveBtn" onclick="saveItem()">儲存</button>
+        <button type="button" class="del-btn" id="delBtn" style="display:none" onclick="confirmDeleteItem()">刪除</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Form: add a new category -->
+  <div class="overlay" id="catOverlay" onclick="handleOverlayClick(event,'catOverlay')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">
+        <span>新增類別</span>
+        <button class="close-btn" onclick="closeSheet('catOverlay')">✕</button>
+      </div>
+      <label class="field-label">名稱 <span style="color:#ff5470">*</span></label>
+      <input type="text" id="newCatName" placeholder="2-10 個字" maxlength="10" />
+      <div class="error-message" id="catNameError">^_^</div>
+      <button class="save-btn all" onclick="addCustomCategory()">新增類別</button>
+    </div>
+  </div>
+
+  <!-- Popup: continue editing an unsaved item? -->
+  <div class="modal-center-overlay" id="draftModal">
+    <div class="modal-box">
+      <h2 id="draftTitle"></h2>
+      <p id="draftDesc"></p>
+      <div class="unsaved-preview-row" id="draftPreview"></div>
+      <div class="modal-btn-row">
+        <button class="modal-btn new" onclick="discardDraft()">直接新增</button>
+        <button class="modal-btn continue" onclick="continueDraft()">繼續編輯</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup: confirm before deleting -->
+  <div class="modal-center-overlay" id="confirmModal">
+    <div class="modal-box">
+      <h2 id="confirmTitle"></h2>
+      <p id="confirmDesc"></p>
+      <div class="modal-btn-row">
+        <button class="modal-btn cancel" onclick="closeConfirmModal()">取消</button>
+        <button class="modal-btn danger" id="confirmOkBtn">確定刪除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Small message that shows briefly (e.g. "Saved") -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,811 @@
+/* ══════════════════════════════════════════════════════════════ */
+/* VARIABLES & BASE STYLES | 變數與基本樣式                       */
+/* Colors, sizes and page defaults                                */
+/* 顏色、尺寸與頁面預設值                                         */
+/* ══════════════════════════════════════════════════════════════ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --spring-dark: #e8438a;
+  --summer-dark: #e86c20;
+  --autumn-dark: #c9960a;
+  --winter-dark: #1a84d8;
+  --spring-bg: #fde8f3;
+  --summer-bg: #fdeee0;
+  --autumn-bg: #fdf5d0;
+  --winter-bg: #daeeff;
+  --text: #1a1a2e;
+  --text2: #555577;
+  --border: #e8e8f0;
+  --white: #ffffff;
+  --bg: #f7f7fb;
+  --accent: #555577;
+  --radius: 12px;
+  --shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Helvetica Neue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* LOADING SCREEN | 載入畫面                                      */
+/* Shown while the app starts                                     */
+/* App 啟動時顯示                                                 */
+/* ══════════════════════════════════════════════════════════════ */
+
+#loadingScreen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  gap: 16px;
+}
+
+#loadingScreen .loading-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* TOP BAR & SEASON TABS | 頂部列與季節分頁                       */
+/* App title and season buttons at the top                        */
+/* 最上方的標題和季節按鈕                                         */
+/* ══════════════════════════════════════════════════════════════ */
+
+.top-bar {
+  background: linear-gradient(135deg, var(--white) 0%, #fafbff 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.top-bar-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.season-tabs {
+  display: flex;
+  gap: 0;
+}
+
+.season-tab {
+  flex: 1;
+  padding: 12px 4px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  color: var(--text2);
+  transition: all 0.1s;
+}
+
+.season-tab:active {
+  opacity: 0.75;
+}
+
+.season-tab.active-all { color: var(--text); border-bottom-color: var(--text); }
+.season-tab.active-spring { color: var(--spring-dark); border-bottom-color: var(--spring-dark); }
+.season-tab.active-summer { color: var(--summer-dark); border-bottom-color: var(--summer-dark); }
+.season-tab.active-autumn { color: var(--autumn-dark); border-bottom-color: var(--autumn-dark); }
+.season-tab.active-winter { color: var(--winter-dark); border-bottom-color: var(--winter-dark); }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* CATEGORY BAR | 類別列                                          */
+/* Scrollable row of category buttons                             */
+/* 可左右滑動的類別按鈕                                           */
+/* ══════════════════════════════════════════════════════════════ */
+
+.cat-bar-wrap {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+}
+
+.cat-bar {
+  display: flex;
+  padding: 10px;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d0d0f0 transparent;
+  align-items: center;
+}
+
+.cat-bar::-webkit-scrollbar {
+  height: 3px;
+}
+
+.cat-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cat-bar::-webkit-scrollbar-thumb {
+  background: #d0d0f0;
+  border-radius: 2px;
+}
+
+.cat-item {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  position: relative;
+  user-select: none;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background-color: var(--white);
+  padding: 6px 14px;
+  height: 30px;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.delete-btn {
+  display: none;
+  width: 16px;
+  height: 16px;
+  background-color: #ff5470;
+  color: white;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: 5px;
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+  z-index: 10;
+}
+
+.cat-editing-mode .custom-cat .delete-btn {
+  display: flex;
+}
+
+.cat-editing-mode .custom-cat {
+  animation: wiggle 0.3s ease;
+  border-color: #ffb0c0;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+}
+
+.edit-cat-btn {
+  background-color: transparent;
+  border: 1.5px solid #e0e0f0;
+  color: #a0a0c0;
+  font-size: 14px;
+  min-width: 34px;
+}
+
+.edit-cat-btn.active {
+  background: #fff0f3;
+  border-color: #ff5470;
+  color: #ff5470;
+}
+
+.add-cat-btn {
+  background-color: transparent;
+  border: 1.5px dashed #c0c0e0;
+  color: #b0b0cc;
+  font-size: 18px;
+  font-weight: 400;
+  min-width: 34px;
+}
+
+.add-cat-btn:active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cat-item.cat-active {
+  background: var(--text);
+  border-color: var(--text);
+  color: #fff !important;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* CLOTHES LIST | 衣服清單                                        */
+/* The list of clothes                                            */
+/* 顯示所有衣服的清單                                             */
+/* ══════════════════════════════════════════════════════════════ */
+
+.list {
+  padding: 12px 14px 100px;
+}
+
+.list-item {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px 11px 14px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.list-item:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+.list-item-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.list-item-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-item-meta {
+  font-size: 11px;
+  color: var(--text2);
+}
+
+.list-item-thumb {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-left: 12px;
+  background: linear-gradient(135deg, #eeeefc, #f5f5fd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #c0c0e0;
+}
+
+.list-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.season-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 8px;
+  margin-right: 4px;
+}
+
+.badge-spring { background: var(--spring-bg); color: var(--spring-dark); }
+.badge-summer { background: var(--summer-bg); color: var(--summer-dark); }
+.badge-autumn { background: var(--autumn-bg); color: var(--autumn-dark); }
+.badge-winter { background: var(--winter-bg); color: var(--winter-dark); }
+
+.empty {
+  text-align: center;
+  padding: 70px 0;
+  color: #b0b0cc;
+}
+
+.empty-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  opacity: 0.6;
+}
+
+.empty p {
+  font-size: 13px;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* ADD BUTTON | 新增按鈕                                          */
+/* Round + button in the bottom right corner                      */
+/* 右下角的圓形 + 按鈕                                            */
+/* ══════════════════════════════════════════════════════════════ */
+
+.fab {
+  position: fixed;
+  bottom: 28px;
+  right: 20px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.fab:active {
+  transform: scale(0.9);
+}
+
+.fab.all    { background-color: #555577; }
+.fab.spring { background: var(--spring-dark); }
+.fab.summer { background: var(--summer-dark); }
+.fab.autumn { background: var(--autumn-dark); }
+.fab.winter { background: var(--winter-dark); }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* BOTTOM FORMS | 底部表單                                        */
+/* Forms that slide up from the bottom                            */
+/* 從畫面下方滑出的表單                                           */
+/* ══════════════════════════════════════════════════════════════ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,20,60,0.35);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.sheet {
+  background: var(--white);
+  border-radius: 18px 18px 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 20px 18px 40px;
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.overlay.open .sheet {
+  transform: translateY(0);
+}
+
+.sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  margin: 0 auto 18px;
+}
+
+.sheet-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #b0b0cc;
+  padding: 4px;
+}
+
+.close-btn:active {
+  color: var(--text);
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* FORM PARTS | 表單元件                                          */
+/* Inputs, photo box, counter and buttons                         */
+/* 輸入框、照片區、計數器與按鈕                                   */
+/* ══════════════════════════════════════════════════════════════ */
+
+label.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: 6px;
+  margin-top: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+input[type=text],
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fafbff;
+}
+
+input[type=text]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  background: #fff;
+}
+
+textarea {
+  resize: none;
+}
+
+.photo-area {
+  width: 100%;
+  aspect-ratio: 2/1.5;
+  border-radius: 10px;
+  border: 2px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  background: #f8f8fd;
+  transition: all 0.2s;
+}
+
+.photo-area:active {
+  border-color: var(--accent);
+  background: #f0f0fa;
+}
+
+#fileInput {
+  display: none;
+}
+
+.photo-uploading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text2);
+  gap: 8px;
+  border-radius: 10px;
+}
+
+.counter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.counter-val {
+  font-size: 24px;
+  font-weight: 800;
+  min-width: 40px;
+  text-align: center;
+}
+
+.counter-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s;
+}
+
+.counter-btn:active {
+  background: var(--border);
+  transform: scale(0.9);
+}
+
+.save-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 22px;
+  transition: opacity 0.15s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+.save-btn:active {
+  opacity: 0.82;
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.save-btn.all    { background: #555577; }
+.save-btn.spring { background: var(--spring-dark); }
+.save-btn.summer { background: var(--summer-dark); }
+.save-btn.autumn { background: var(--autumn-dark); }
+.save-btn.winter { background: var(--winter-dark); }
+
+.del-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1.5px solid #ffccd8;
+  background: #fff5f8;
+  color: #e0406a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.15s;
+}
+
+.del-btn:active {
+  background: #ffeaee;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* POPUPS | 彈窗                                                  */
+/* Popup boxes in the middle of the screen                        */
+/* 畫面中間的彈出視窗                                             */
+/* ══════════════════════════════════════════════════════════════ */
+
+.modal-center-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,20,60,0.4);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  padding: 20px;
+}
+
+.modal-center-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-box {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 22px 18px 18px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 6px 30px rgba(60,60,180,0.15);
+}
+
+.modal-box h2 {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.modal-box p {
+  font-size: 13px;
+  color: var(--text2);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.unsaved-thumb {
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f4f4fc, #f0f0fa);
+  aspect-ratio: 3/4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.unsaved-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.unsaved-preview-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.unsaved-item {
+  flex: 1;
+}
+
+.unsaved-name {
+  font-size: 11px;
+  text-align: center;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text2);
+}
+
+.modal-btn-row {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.modal-btn:active {
+  transform: scale(0.96);
+}
+
+.modal-btn.continue { background: var(--text); color: #fff; }
+.modal-btn.new { background: #f0f0fa; color: var(--text2); }
+.modal-btn.danger { background: #e0406a; color: #fff; }
+.modal-btn.cancel { background: #f0f0fa; color: var(--text2); }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* TOAST MESSAGE | 提示訊息                                       */
+/* Small message that shows briefly                               */
+/* 短暫出現的小訊息                                               */
+/* ══════════════════════════════════════════════════════════════ */
+
+.toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-70px);
+  background: rgba(30,30,80,0.88);
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 300;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* FORM ERRORS | 表單錯誤                                         */
+/* Red border and message for missing fields                      */
+/* 必填欄位未填時的紅框與訊息                                     */
+/* ══════════════════════════════════════════════════════════════ */
+
+.required-field {
+  border-color: #ff5470 !important;
+}
+
+.error-message {
+  color: #ff5470;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* SAVE STATUS DOT | 儲存狀態圓點                                 */
+/* Dot by the title: green = ok, orange = saving, red = error     */
+/* 標題旁的圓點：綠 = 正常，橘 = 儲存中，紅 = 錯誤                */
+/* ══════════════════════════════════════════════════════════════ */
+
+.sync-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4caf50;
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: background 0.3s;
+}
+
+.sync-dot.syncing {
+  background: #ff9800;
+  animation: pulse 1s infinite;
+}
+
+.sync-dot.error {
+  background: #f44336;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
