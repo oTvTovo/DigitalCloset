@@ -19,7 +19,7 @@ The app saves data in the browser, so it does not need a server or database.
 6. Use the filters to find clothes by season or group.
 7. Update the wear count when you wear an item.
 8. Edit or delete clothing items whenever you need to.
-Website: **(https://otvtovo.github.io/Digital-Closet/)**
+Website: **(https://otvtovo.github.io/DigitalCloset/)**
 # 📱 Use on Your Phone
 You can add the website to your phone’s home screen for easy access.
 * iPhone: Open the website in Safari, tap the Share button, and choose “Add to Home Screen.”
